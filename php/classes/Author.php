@@ -4,6 +4,7 @@ namespace tgray19\ObjectOriented;
 
 require_once(dirname(__DIR__,2) . "/composer.json/autoload.php");
 
+
 use Ramsey\Uuid\Uuid;
 /**
  * Cross Section of an Author
@@ -70,4 +71,38 @@ class Author  {
 		// convert and store the author id
 		$this->authorId = $uuid;
 	}
+	/**
+	 *Accessor method for authorAvatarUrl
+	 *@return avatar url string
+	 */
+	public function getAuthorAvatarUrl(): ?string {
+		return ($this->authorAvatarUrl);
+	}
+	/**
+	 * mutator method for author avatar url
+	 *
+	 * @param  $string| string $newauthorAvatarUrl value of new author url
+	 * @throws \InvalidArgumentException if $newAuthorAvatarUrl is not a valid url or insecure
+	 * @throws \RangeException if $newAuthorAvatarUrl is over charset
+	 * @throws \TypeError if the author avatar url is not a string
+	 **/
+	public function setAuthorAvatarUrl(?string $newAuthorAvatarUrl): void {
+		if($newAuthorAvatarUrl === null) {
+			$this->$authorAvatarUrl = null;
+			return;
+		}
+		$newAuthorAvatarUrl = strtolower(trim($newAuthorAvatarUrl));
+		if(ctype_xdigit($newAuthorAvatarUrl) === false) {
+			throw(new\RangeException("user activation is not valid"));
+		}
+		//make sure author avatar url is less than 255 characters
+		if(strlen($newAuthorAvatarUrl) >255) {
+			throw(new\RangeException("user activation token has to be less than 255"));
+		}
+		$this->authorAvatarUrl = $newAuthorAvatarUrl;
+	}
+		// convert and store the avatar url
+		$this->authorAvatarUrl = $string;
+	}
+	
 }
