@@ -93,16 +93,15 @@ class Author  {
 		}
 		$newAuthorAvatarUrl = strtolower(trim($newAuthorAvatarUrl));
 		if(ctype_xdigit($newAuthorAvatarUrl) === false) {
-			throw(new\RangeException("user url is not valid"));
+			throw(new\TypeError("user url is not valid"));
 		}
 		//make sure author avatar url is less than 255 characters
 		if(strlen($newAuthorAvatarUrl) >255) {
 			throw(new\RangeException("user url has to be less than 255"));
 		}
+		// convert and store the avatar url
 		$this->authorAvatarUrl = $newAuthorAvatarUrl;
 	}
-		// convert and store the avatar url
-		$this->authorAvatarUrl = $string;
 	}
 /**
  *Accessor method for authorActivationToken
@@ -126,16 +125,15 @@ public function setAuthorActivationToken(?string $newAuthorActivationToken): voi
 	}
 	$newAuthorActivationToken = strtolower(trim($newAuthorActivationToken));
 	if(ctype_xdigit($newAuthorActivationToken) === false) {
-		throw(new\RangeException("user activation is not valid"));
+		throw(new\TypeError("user activation is not valid"));
 	}
 	//make sure author avatar url is less than 32 characters
 	if(strlen($newAuthorActivationToken) >32) {
 		throw(new\RangeException("user activation token has to be less than 32"));
 	}
+	// convert and store the activation token
 	$this->authorActivationToken = $newAuthorActivationToken;
 }
-// convert and store the activation token
-$this->authorActivationToken = $string;
 }
 /**
  *Accessor method for authorEmail
@@ -159,16 +157,15 @@ public function setAuthorEmail(?string $newAuthorEmail): void {
 	}
 	$newAuthorEmail = strtolower(trim($newAuthorEmail));
 	if(ctype_xdigit($newAuthorEmail) === false) {
-		throw(new\RangeException("user email is not valid"));
+		throw(new\TypeError("user email is not valid"));
 	}
 	//make sure author email is less than 128 characters
 	if(strlen($newAuthorEmail) >128) {
 		throw(new\RangeException("user email has to be less than 128"));
 	}
+	// convert and store the new email.
 	$this->authorEmail = $newAuthorEmail;
 }
-// convert and store the new email.
-$this->authorEmail = $string;
 }
 /**
  *Accessor method for authorHash
@@ -192,15 +189,45 @@ public function setAuthorHash(?string $newAuthorHash): void {
 	}
 	$newAuthorHash = strtolower(trim($newAuthorHash));
 	if(ctype_xdigit($newAuthorHash) === false) {
-		throw(new\RangeException("user hash is not valid"));
+		throw(new\TypeError("user hash is not valid"));
 	}
 	//make sure author hash is less than 97 characters
 	if(strlen($newAuthorHash) >97) {
 		throw(new\RangeException("user hash has to be less than 97"));
 	}
+	// convert and store the new hash.
 	$this->authorHash = $newAuthorHash;
 }
-// convert and store the new hash.
-$this->authorHash = $string;
+}
+/**
+ *Accessor method for authorUsername
+ *@return authorUsername string
+ */
+public function getAuthorUsername(): ?string {
+	return ($this->authorUsername);
+}
+/**
+ * mutator method for author username
+ *
+ * @param  $string| string $newAuthorUsername value of new author username
+ * @throws \InvalidArgumentException if $newAuthorUsername is not a valid hash key or insecure
+ * @throws \RangeException if $newAuthorUsername is over charset
+ * @throws \TypeError if the author username is not a string
+ **/
+public function setAuthorUsername(?string $newAuthorUsername): void {
+	if($newAuthorUsername === null) {
+		$this->$newAuthorUsername = null;
+		return;
+	}
+	$newAuthorUsername = strtolower(trim($newAuthorUsername));
+	if(ctype_xdigit($newAuthorUsername) === false) {
+		throw(new\TypeError("username isnt valid"));
+	}
+	//make sure author hash is less than 97 characters
+	if(strlen($newAuthorUsername) >32) {
+		throw(new\RangeException("username has to be less than 32"));
+	}
+	// convert and store the new username.
+	$this->authorUsername = $newAuthorUsername;
 }
 }
