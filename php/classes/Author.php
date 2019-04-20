@@ -93,16 +93,49 @@ class Author  {
 		}
 		$newAuthorAvatarUrl = strtolower(trim($newAuthorAvatarUrl));
 		if(ctype_xdigit($newAuthorAvatarUrl) === false) {
-			throw(new\RangeException("user activation is not valid"));
+			throw(new\RangeException("user url is not valid"));
 		}
 		//make sure author avatar url is less than 255 characters
 		if(strlen($newAuthorAvatarUrl) >255) {
-			throw(new\RangeException("user activation token has to be less than 255"));
+			throw(new\RangeException("user url has to be less than 255"));
 		}
 		$this->authorAvatarUrl = $newAuthorAvatarUrl;
 	}
 		// convert and store the avatar url
 		$this->authorAvatarUrl = $string;
 	}
-	
+/**
+ *Accessor method for authorActivationToken
+ *@return authorActivationToken string
+ */
+public function getAuthorActivationToken(): ?string {
+	return ($this->authorActivationToken);
+}
+/**
+ * mutator method for author activation token
+ *
+ * @param  $string| string $newAuthorActivationToken value of new author activation token
+ * @throws \InvalidArgumentException if $newAuthorActivationToken is not a valid url or insecure
+ * @throws \RangeException if $newAuthorActivationToken is over charset
+ * @throws \TypeError if the author avatar activation is not a string
+ **/
+public function setAuthorActivationToken(?string $newAuthorActivationToken): void {
+	if($newAuthorActivationToken === null) {
+		$this->$authorActivationToken = null;
+		return;
+	}
+	$newAuthorActivationToken = strtolower(trim($newAuthorActivationToken));
+	if(ctype_xdigit($newAuthorActivationToken) === false) {
+		throw(new\RangeException("user activation is not valid"));
+	}
+	//make sure author avatar url is less than 32 characters
+	if(strlen($newAuthorActivationToken) >32) {
+		throw(new\RangeException("user activation token has to be less than 32"));
+	}
+	$this->authorActivationToken = $newAuthorActivationToken;
+}
+// convert and store the activation token
+$this->authorActivationToken = $string;
+}
+
 }
