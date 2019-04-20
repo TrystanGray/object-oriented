@@ -137,5 +137,38 @@ public function setAuthorActivationToken(?string $newAuthorActivationToken): voi
 // convert and store the activation token
 $this->authorActivationToken = $string;
 }
+/**
+ *Accessor method for authorEmail
+ *@return authorEmail string
+ */
+public function getAuthorEmail(): ?string {
+	return ($this->authorEmail);
+}
+/**
+ * mutator method for author email
+ *
+ * @param  $string| string $newAuthorEmail value of new author email
+ * @throws \InvalidArgumentException if $newAuthorEmail is not a valid email or insecure
+ * @throws \RangeException if $newAuthorEmail is over charset
+ * @throws \TypeError if the author email is not a string
+ **/
+public function setAuthorEmail(?string $newAuthorEmail): void {
+	if($newAuthorEmail === null) {
+		$this->$newAuthorEmail = null;
+		return;
+	}
+	$newAuthorEmail = strtolower(trim($newAuthorEmail));
+	if(ctype_xdigit($newAuthorEmail) === false) {
+		throw(new\RangeException("user email is not valid"));
+	}
+	//make sure author email is less than 128 characters
+	if(strlen($newAuthorEmail) >128) {
+		throw(new\RangeException("user email has to be less than 128"));
+	}
+	$this->authorEmail = $newAuthorEmail;
+}
+// convert and store the new email.
+$this->authorEmail = $string;
+}
 
 }
