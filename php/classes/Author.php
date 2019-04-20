@@ -170,5 +170,37 @@ public function setAuthorEmail(?string $newAuthorEmail): void {
 // convert and store the new email.
 $this->authorEmail = $string;
 }
-
+/**
+ *Accessor method for authorHash
+ *@return authorHash string
+ */
+public function getAuthorHash(): ?string {
+	return ($this->authorHash);
+}
+/**
+ * mutator method for author hash
+ *
+ * @param  $string| string $newAuthorHash value of new author email
+ * @throws \InvalidArgumentException if $newAuthorHash is not a valid hash key or insecure
+ * @throws \RangeException if $newAuthorHash is over charset
+ * @throws \TypeError if the author hash is not a string
+ **/
+public function setAuthorHash(?string $newAuthorHash): void {
+	if($newAuthorHash === null) {
+		$this->$newAuthorHash = null;
+		return;
+	}
+	$newAuthorHash = strtolower(trim($newAuthorHash));
+	if(ctype_xdigit($newAuthorHash) === false) {
+		throw(new\RangeException("user hash is not valid"));
+	}
+	//make sure author hash is less than 97 characters
+	if(strlen($newAuthorHash) >97) {
+		throw(new\RangeException("user hash has to be less than 97"));
+	}
+	$this->authorHash = $newAuthorHash;
+}
+// convert and store the new hash.
+$this->authorHash = $string;
+}
 }
