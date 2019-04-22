@@ -230,4 +230,3 @@ public function setAuthorUsername(?string $newAuthorUsername): void {
 	// convert and store the new username.
 	$this->authorUsername = $newAuthorUsername;
 }
-}
