@@ -5,7 +5,7 @@ namespace tgray19\ObjectOriented;
 require_once(dirname(__DIR__,2) . "/composer.json/autoload.php");
 
 
-use Ramsey\Uuid\Uuid as UuidAlias;
+use Ramsey\Uuid\Uuid;
 /**
  * Cross Section of an Author
  *
