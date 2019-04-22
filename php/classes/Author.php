@@ -49,6 +49,32 @@ class Author {
 	 * @var $authorUsername
 	 */
 	private $authorUsername;
+	/**
+	 * constructor for this Author
+	 *
+	 * @param string|Uuid $newTweetId id of this Tweet or null if a new Tweet
+	 * @param string|Uuid $newTweetProfileId id of the Profile that sent this Tweet
+	 * @param string $newTweetContent string containing actual tweet data
+	 * @param \DateTime|string|null $newTweetDate date and time Tweet was sent or null if set to current date and time
+	 * @throws \InvalidArgumentException if data types are not valid
+	 * @throws \RangeException if data values are out of bounds (e.g., strings too long, negative integers)
+	 * @throws \TypeError if data types violate type hints
+	 * @throws \Exception if some other exception occurs
+	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
+	 **/
+	public function __construct($newTweetId, $newTweetProfileId, string $newTweetContent, $newTweetDate = null) {
+		try {
+			$this->setTweetId($newTweetId);
+			$this->setTweetProfileId($newTweetProfileId);
+			$this->setTweetContent($newTweetContent);
+			$this->setTweetDate($newTweetDate);
+		}
+			//determine what exception type was thrown
+		catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
+			$exceptionType = get_class($exception);
+			throw(new $exceptionType($exception->getMessage(), 0, $exception));
+		}
+	}
 
 	/**
 	 *Accessor method for authorId
