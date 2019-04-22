@@ -5,7 +5,7 @@ namespace tgray19\ObjectOriented;
 require_once(dirname(__DIR__,2) . "/composer.json/autoload.php");
 
 
-use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\Uuid as UuidAlias;
 /**
  * Cross Section of an Author
  *
@@ -17,9 +17,10 @@ use Ramsey\Uuid\Uuid;
  **/
 class Author  {
 	use ValidateUuid;
+	use ValidateDate;
 	/**
 	 * id and P.K. for author
-	 * @var Uuid $authorId
+	 * @var string Uuid $authorId
 	 */
 	private $authorId;
 	/**
@@ -47,17 +48,18 @@ class Author  {
 	 * @var $authorUsername
 	 */
 	private $authorUsername;
+
 	/**
 	 *Accessor method for authorId
-	 *@return Uuid value of author id (or null if new Profile)
+	 * @return string for authorId (or null if new Profile)
 	 */
 	public function getAuthorId():Uuid {
-		return ($this->authorId);
+		return($this->authorId);
 	}
 	/**
 	 * mutator method for author id
 	 *
-	 * @param  Uuid| string $newAuthorId value of new author id
+	 * @param  string $newAuthorId value of new author id
 	 * @throws \RangeException if $newAuthorId is not positive
 	 * @throws \TypeError if the author Id is not positive
 	 **/
@@ -73,7 +75,7 @@ class Author  {
 	}
 	/**
 	 *Accessor method for authorAvatarUrl
-	 *@return avatar url string
+	 *@return string for avatarUrl
 	 */
 	public function getAuthorAvatarUrl(): ?string {
 		return ($this->authorAvatarUrl);
@@ -81,14 +83,14 @@ class Author  {
 	/**
 	 * mutator method for author avatar url
 	 *
-	 * @param  $string| string $newauthorAvatarUrl value of new author url
+	 * @param  string $newAuthorAvatarUrl value of new author url
 	 * @throws \InvalidArgumentException if $newAuthorAvatarUrl is not a valid url or insecure
 	 * @throws \RangeException if $newAuthorAvatarUrl is over charset
 	 * @throws \TypeError if the author avatar url is not a string
 	 **/
 	public function setAuthorAvatarUrl(?string $newAuthorAvatarUrl): void {
 		if($newAuthorAvatarUrl === null) {
-			$this->$authorAvatarUrl = null;
+			$this->authorAvatarUrl = $newAuthorAvatarUrl;
 			return;
 		}
 		$newAuthorAvatarUrl = strtolower(trim($newAuthorAvatarUrl));
@@ -102,10 +104,9 @@ class Author  {
 		// convert and store the avatar url
 		$this->authorAvatarUrl = $newAuthorAvatarUrl;
 	}
-	}
 /**
  *Accessor method for authorActivationToken
- *@return authorActivationToken string
+ *@return string for authorActivationToken
  */
 public function getAuthorActivationToken(): ?string {
 	return ($this->authorActivationToken);
@@ -113,14 +114,14 @@ public function getAuthorActivationToken(): ?string {
 /**
  * mutator method for author activation token
  *
- * @param  $string| string $newAuthorActivationToken value of new author activation token
+ * @param  string $newAuthorActivationToken value of new author activation token
  * @throws \InvalidArgumentException if $newAuthorActivationToken is not a valid url or insecure
  * @throws \RangeException if $newAuthorActivationToken is over charset
  * @throws \TypeError if the author avatar activation is not a string
  **/
 public function setAuthorActivationToken(?string $newAuthorActivationToken): void {
 	if($newAuthorActivationToken === null) {
-		$this->$authorActivationToken = null;
+		$this->authorActivationToken = $newAuthorActivationToken;
 		return;
 	}
 	$newAuthorActivationToken = strtolower(trim($newAuthorActivationToken));
@@ -134,10 +135,9 @@ public function setAuthorActivationToken(?string $newAuthorActivationToken): voi
 	// convert and store the activation token
 	$this->authorActivationToken = $newAuthorActivationToken;
 }
-}
 /**
  *Accessor method for authorEmail
- *@return authorEmail string
+ *@return string for authorEmail
  */
 public function getAuthorEmail(): ?string {
 	return ($this->authorEmail);
@@ -145,7 +145,7 @@ public function getAuthorEmail(): ?string {
 /**
  * mutator method for author email
  *
- * @param  $string| string $newAuthorEmail value of new author email
+ * @param  string $newAuthorEmail value of new author email
  * @throws \InvalidArgumentException if $newAuthorEmail is not a valid email or insecure
  * @throws \RangeException if $newAuthorEmail is over charset
  * @throws \TypeError if the author email is not a string
@@ -166,10 +166,9 @@ public function setAuthorEmail(?string $newAuthorEmail): void {
 	// convert and store the new email.
 	$this->authorEmail = $newAuthorEmail;
 }
-}
 /**
  *Accessor method for authorHash
- *@return authorHash string
+ *@return string for authorHash
  */
 public function getAuthorHash(): ?string {
 	return ($this->authorHash);
@@ -177,7 +176,7 @@ public function getAuthorHash(): ?string {
 /**
  * mutator method for author hash
  *
- * @param  $string| string $newAuthorHash value of new author email
+ * @param  string $newAuthorHash value of new author email
  * @throws \InvalidArgumentException if $newAuthorHash is not a valid hash key or insecure
  * @throws \RangeException if $newAuthorHash is over charset
  * @throws \TypeError if the author hash is not a string
@@ -198,10 +197,9 @@ public function setAuthorHash(?string $newAuthorHash): void {
 	// convert and store the new hash.
 	$this->authorHash = $newAuthorHash;
 }
-}
 /**
  *Accessor method for authorUsername
- *@return authorUsername string
+ *@return string for authorUsername
  */
 public function getAuthorUsername(): ?string {
 	return ($this->authorUsername);
@@ -209,7 +207,7 @@ public function getAuthorUsername(): ?string {
 /**
  * mutator method for author username
  *
- * @param  $string| string $newAuthorUsername value of new author username
+ * @param  string $newAuthorUsername value of new author username
  * @throws \InvalidArgumentException if $newAuthorUsername is not a valid hash key or insecure
  * @throws \RangeException if $newAuthorUsername is over charset
  * @throws \TypeError if the author username is not a string
@@ -221,12 +219,12 @@ public function setAuthorUsername(?string $newAuthorUsername): void {
 	}
 	$newAuthorUsername = strtolower(trim($newAuthorUsername));
 	if(ctype_xdigit($newAuthorUsername) === false) {
-		throw(new\TypeError("username isnt valid"));
+		throw(new\TypeError("username is not valid"));
 	}
 	//make sure author hash is less than 97 characters
-	if(strlen($newAuthorUsername) >32) {
+	if(strlen($newAuthorUsername) > 32) {
 		throw(new\RangeException("username has to be less than 32"));
 	}
 	// convert and store the new username.
 	$this->authorUsername = $newAuthorUsername;
-}
+}}
