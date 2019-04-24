@@ -2,7 +2,7 @@
 
 namespace tgray19\ObjectOriented;
 
-require_once(dirname(__DIR__,2) . "/vendor/autoload.php");
+require_once(dirname(__DIR__) . "/vendor/autoload.php");
 require_once("autoload.php");
 require_once("author.php");
 
@@ -66,7 +66,7 @@ class Author {
 	 * @Documentation https://php.net/manual/en/language.oop5.decon.php
 	 **/
 	public function __construct($newAuthorId, string $newAuthorAvatarUrl, string $newAuthorActivationToken,
-										 string $newAuthorEmail, string $newAuthorHash, string $newAuthorUsername = null) {
+										 string $newAuthorEmail, string $newAuthorHash, string $newAuthorUsername ) {
 		try {
 			$this->setAuthorId($newAuthorId);
 			$this->setAuthorAvatarUrl($newAuthorAvatarUrl);
@@ -122,21 +122,22 @@ class Author {
 	 * @throws \TypeError if the author avatar url is not a string
 	 **/
 	public function setAuthorAvatarUrl(?string $newAuthorAvatarUrl): void {
-		if($newAuthorAvatarUrl === null) {
-			$this->authorAvatarUrl = $newAuthorAvatarUrl;
-			return;
+// verify the avatar content is secure
+		$newAuthorAvatarUrl = trim($newAuthorAvatarUrl);
+		$newAuthorAvatarUrl = filter_var($newAuthorAvatarUrl, FILTER_SANITIZE_URL, FILTER_FLAG_NO_ENCODE_QUOTES);
+		if(empty($newAuthorAvatarUrl) === true) {
+			throw(new \InvalidArgumentException("Avatar url is empty or insecure"));
 		}
-		$newAuthorAvatarUrl = strtolower(trim($newAuthorAvatarUrl));
-		if(ctype_xdigit($newAuthorAvatarUrl) === false) {
-			throw(new\TypeError("user url is not valid"));
+
+		// verify the avatar content will fit in the database
+		if(strlen($newAuthorAvatarUrl) > 255) {
+			throw(new \RangeException("avatar content too large"));
 		}
-		//make sure author avatar url is less than 255 characters
-		if(strlen($newAuthorAvatarUrl) >255) {
-			throw(new\RangeException("user url has to be less than 255"));
-		}
-		// convert and store the avatar url
-		$this->authorAvatarUrl = $newAuthorAvatarUrl;
+
+		// store the avatar content
+		$this->$newAuthorAvatarUrl = $newAuthorAvatarUrl;
 	}
+
 /**
  *Accessor method for authorActivationToken
  *@return string for authorActivationToken
@@ -184,20 +185,20 @@ public function getAuthorEmail(): ?string {
  * @throws \TypeError if the author email is not a string
  **/
 public function setAuthorEmail(?string $newAuthorEmail): void {
-	if($newAuthorEmail === null) {
-		$this->$newAuthorEmail = null;
-		return;
+// verify the email content is secure
+	$newAuthorEmail = trim($newAuthorEmail);
+	$newAuthorEmail = filter_var($newAuthorEmail, FILTER_SANITIZE_EMAIL, FILTER_FLAG_NO_ENCODE_QUOTES);
+	if(empty($newAuthorEmail) === true) {
+		throw(new \InvalidArgumentException("Email is empty or insecure"));
 	}
-	$newAuthorEmail = strtolower(trim($newAuthorEmail));
-	if(ctype_xdigit($newAuthorEmail) === false) {
-		throw(new\TypeError("user email is not valid"));
+
+	// verify the email content will fit in the database
+	if(strlen($newAuthorEmail) > 128) {
+		throw(new \RangeException("email content too large"));
 	}
-	//make sure author email is less than 128 characters
-	if(strlen($newAuthorEmail) >128) {
-		throw(new\RangeException("user email has to be less than 128"));
-	}
-	// convert and store the new email.
-	$this->authorEmail = $newAuthorEmail;
+
+	// store the email content
+	$this->$newAuthorEmail = $newAuthorEmail;
 }
 /**
  *Accessor method for authorHash
@@ -215,19 +216,21 @@ public function getAuthorHash(): ?string {
  * @throws \TypeError if the author hash is not a string
  **/
 public function setAuthorHash(?string $newAuthorHash): void {
-	if($newAuthorHash === null) {
-		$this->$newAuthorHash = null;
-		return;
+//enforce that the hash is properly formatted
+	$newAuthorHash = trim($newAuthorHash);
+	if(empty($newAuthorHash) === true) {
+		throw(new \InvalidArgumentException("Author password hash empty or insecure"));
 	}
-	$newAuthorHash = strtolower(trim($newAuthorHash));
-	if(ctype_xdigit($newAuthorHash) === false) {
-		throw(new\TypeError("user hash is not valid"));
+	//enforce the hash is really an Argon hash
+	$profileHashInfo = password_get_info($newAuthorHash);
+	if($profileHashInfo["algoName"] !== "argon2i") {
+		throw(new \InvalidArgumentException("Author hash is not a valid hash"));
 	}
-	//make sure author hash is less than 97 characters
-	if(strlen($newAuthorHash) >97) {
-		throw(new\RangeException("user hash has to be less than 97"));
+	//enforce that the hash is exactly 97 characters.
+	if(strlen($newAuthorHash) !== 97) {
+		throw(new \RangeException("Author hash must be 97 characters"));
 	}
-	// convert and store the new hash.
+	//store the hash
 	$this->authorHash = $newAuthorHash;
 }
 /**
@@ -246,19 +249,17 @@ public function getAuthorUsername(): ?string {
  * @throws \TypeError if the author username is not a string
  **/
 public function setAuthorUsername(?string $newAuthorUsername): void {
-	if($newAuthorUsername === null) {
-		$this->$newAuthorUsername = null;
-		return;
+	// verify the at handle is secure
+	$newAuthorUsername = trim($newAuthorUsername);
+	$newAuthorUsername = filter_var($newAuthorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	if(empty($newAuthorUsername) === true) {
+		throw(new \InvalidArgumentException("author username is empty or insecure"));
 	}
-	$newAuthorUsername = strtolower(trim($newAuthorUsername));
-	if(ctype_xdigit($newAuthorUsername) === false) {
-		throw(new\TypeError("username is not valid"));
-	}
-	//make sure author hash is less than 97 characters
+	// verify the username will fit in the database
 	if(strlen($newAuthorUsername) > 32) {
-		throw(new\RangeException("username has to be less than 32"));
+		throw(new \RangeException("Username is too large"));
 	}
-	// convert and store the new username.
+	// store the username
 	$this->authorUsername = $newAuthorUsername;
 }
 	/**
