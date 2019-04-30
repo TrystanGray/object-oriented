@@ -340,7 +340,7 @@ public static function getAuthorByAuthorId(\PDO $pdo, $authorId) : ?Author {
 		throw(new \PDOException($exception->getMessage(), 0, $exception));
 	}
 	// create query template
-	$query = "SELECT aurthorId, authorProfileId, authorContent, authorDate FROM author WHERE autghorId = :authorId";
+	$query = "SELECT aurthorId, authorProfileId, authorContent, authorDate FROM author WHERE authorId = :authorId";
 	$statement = $pdo->prepare($query);
 	// bind the author id to the place holder in the template
 	$parameters = ["authorId" => $authorId->getBytes()];
@@ -368,25 +368,27 @@ public static function getAuthorByAuthorId(\PDO $pdo, $authorId) : ?Author {
  * @throws \PDOException when mySQL related errors occur
  * @throws \TypeError when variables are not the correct data type
  **/
-public static function getAuthorByAuthorProfileId(\PDO $pdo, $authorProfileId) : \SplFixedArray {
+public static function getAuthorsByAuthorId(\PDO $pdo, $authorId) : \SplFixedArray {
 	try {
-		$authorProfileId = self::validateUuid($authorProfileId);
+		$authorId = self::validateUuid($authorId);
 	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
 		throw(new \PDOException($exception->getMessage(), 0, $exception));
 	}
 	// create query template
-	$query = "SELECT authorId, authorProfileId, authorContent, authorDate FROM author WHERE authorProfileId = :authorProfileId";
+	$query = "SELECT authorId, authorAvatarUrl, authorActivationToken, authorEmail, authorHash, authorUsername FROM author 
+WHERE authorId = :authorId";
 	$statement = $pdo->prepare($query);
 	// bind the author profile id to the place holder in the template
-	$parameters = ["authorProfileId" => $authorProfileId->getBytes()];
+	$parameters = ["authorId" => $authorId->getBytes()];
 	$statement->execute($parameters);
 	// build an array of authors
 	$authors = new \SplFixedArray($statement->rowCount());
 	$statement->setFetchMode(\PDO::FETCH_ASSOC);
 	while(($row = $statement->fetch()) !== false) {
 		try {
-			$author = new Author($row["authorId"], $row["authorProfileId"], $row["authorContent"], $row["authorDate"]);
-			$author[$author->key()] = $author;
+			$author = new Author($row["authorId"], $row["authorAvatarUrl"], $row["authorActivationToken"], $row["authorEmail"],
+				$row["authorHash"], $row["authorUsername"]);
+			$authors[$authors->key()] = $author;
 			$authors->next();
 		} catch(\Exception $exception) {
 			// if the row couldn't be converted, rethrow it
