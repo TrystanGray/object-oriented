@@ -364,11 +364,11 @@ public static function getAuthorByAuthorId(\PDO $pdo, $authorId) : ?Author {
  *
  * @param \PDO $pdo PDO connection object
  * @param Uuid|string $authorProfileId profile id to search by
- * @return \SplFixedArray SplFixedArray of Tweets found
+ * @return \SplFixedArray SplFixedArray of autuhors found
  * @throws \PDOException when mySQL related errors occur
  * @throws \TypeError when variables are not the correct data type
  **/
-public static function getAuthorByTweetProfileId(\PDO $pdo, $authorProfileId) : \SplFixedArray {
+public static function getAuthorByAuthorProfileId(\PDO $pdo, $authorProfileId) : \SplFixedArray {
 	try {
 		$authorProfileId = self::validateUuid($authorProfileId);
 	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
