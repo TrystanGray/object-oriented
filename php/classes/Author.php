@@ -368,18 +368,19 @@ public static function getAuthorByAuthorId(\PDO $pdo, $authorId) : ?Author {
  * @throws \PDOException when mySQL related errors occur
  * @throws \TypeError when variables are not the correct data type
  **/
-public static function getAuthorsByAuthorId(\PDO $pdo, $authorId) : \SplFixedArray {
-	try {
-		$authorId = self::validateUuid($authorId);
-	} catch(\InvalidArgumentException | \RangeException | \Exception | \TypeError $exception) {
-		throw(new \PDOException($exception->getMessage(), 0, $exception));
+public static function getAuthorsByAuthorUsername(\PDO $pdo, string $authorUsername) : \SplFixedArray {
+	$authorUsername = trim($authorUsername);
+	$authorUsername = filter_var($authorUsername, FILTER_SANITIZE_STRING, FILTER_FLAG_NO_ENCODE_QUOTES);
+	if(empty($authorUsername) === true) {
+		throw(new \PDOException("Username content is not valid"));
 	}
 	// create query template
 	$query = "SELECT authorId, authorAvatarUrl, authorActivationToken, authorEmail, authorHash, authorUsername FROM author 
-WHERE authorId = :authorId";
+WHERE authorUsername LIKE :authorUsername";
 	$statement = $pdo->prepare($query);
 	// bind the author profile id to the place holder in the template
-	$parameters = ["authorId" => $authorId->getBytes()];
+	$authorUsername = "%$authorUsername%";
+	$parameters = ["authorUsername" => $authorUsername];
 	$statement->execute($parameters);
 	// build an array of authors
 	$authors = new \SplFixedArray($statement->rowCount());
